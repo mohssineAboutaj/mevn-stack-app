@@ -1,20 +1,21 @@
-const express = require('express'),
-			cors = require('cors'),
-			bodyParser = require('body-parser'),
-			app = express(),
-			port = process.env.PORT || 7700;
+const express = require("express");
+const cors = require("cors");
+const { json, urlencoded } = require("body-parser");
+const app = express();
+const port = process.env.PORT || 7700;
 
 // use some middleware
-app.use(bodyParser.json())
-app.use(cors())
+app.use(json());
+app.use(urlencoded({ extended: true }));
+app.use(cors());
 
 // import routing components
-const posts = require('./routes/posts')
+const posts = require("./routes/posts");
 
 // use main route
-app.use('/api/posts', posts)
+app.use("/api/posts", posts);
 
 // init the listener
 app.listen(port, () => {
-	console.log(`app Running on port ${port}`)
-})
+	console.log(`app Running on port ${port}`);
+});

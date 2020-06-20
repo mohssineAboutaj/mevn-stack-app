@@ -1,4 +1,3 @@
-client/
 # Created by .ignore support plugin (hsz.mobi)
 ### Node template
 # Logs
@@ -55,6 +54,11 @@ typings/
 # Output of 'npm pack'
 *.tgz
 
+# compressed files
+*.zip
+*.7z
+*.rar
+
 # Yarn Integrity file
 .yarn-integrity
 
@@ -69,6 +73,9 @@ typings/
 
 # vuepress build output
 .vuepress/dist
+
+# client-side (not completed)
+/client
 
 # Serverless directories
 .serverless
