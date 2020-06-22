@@ -1,17 +1,24 @@
 const { Router } = require("express");
 const { ObjectID } = require("mongodb");
-const Posts = require("../classes/PostClass");
+const Post = require("../classes/PostClass");
 const router = Router();
 
-// GET
+// GET all
 router.get("/", async (req, res) => {
-	const result = await Posts.all();
+	const result = await Post.all();
+
+	await res.json(await result);
+});
+
+// GET one
+router.get("/:id", async (req, res) => {
+	const result = await Post.onePost(req.params.id);
 
 	await res.json(await result);
 });
 
 // ADD
-router.post("/", async function (req, res) {
+router.post("/add/", async function (req, res) {
 	// post title
 	let title = await req.body.title;
 	title = await title.trim();
@@ -23,17 +30,26 @@ router.post("/", async function (req, res) {
 	// post createdAt
 	const createdAt = new Date();
 
-	const post = { title, content, createdAt };
-
-	const inserting = await Posts.add(post);
+	const inserting = await new Post().add(title, content, createdAt);
 
 	await res.json(await inserting);
 });
 
+// UPDATE
+router.put("/update/:id", async (req, res) => {
+	const result = await Post.update(req.params.id, {
+		title: req.body.title,
+		content: req.body.content,
+		updatedAt: new Date(),
+	});
+
+	await res.json(await result);
+});
+
 // DELETE
-router.delete("/:id", async (req, res) => {
+router.delete("/delete/:id", async (req, res) => {
 	const postID = await ObjectID(req.params.id);
-	const deleting = await Posts.delete(postID);
+	const deleting = await Post.delete(postID);
 	await res.json(await deleting);
 });
 
