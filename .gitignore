@@ -74,9 +74,6 @@ typings/
 # vuepress build output
 .vuepress/dist
 
-# client-side (not completed)
-/client
-
 # Serverless directories
 .serverless
 
