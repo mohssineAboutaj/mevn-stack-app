@@ -1,6 +1,10 @@
 <template>
 	<b-navbar toggleable="md" type="dark" variant="dark">
-		<b-navbar-brand href="#">NavBar</b-navbar-brand>
+		<b-navbar-brand
+			href="#"
+			class="text-capitalize"
+			v-text="'manchour - MEVN app'"
+		></b-navbar-brand>
 
 		<b-navbar-toggle target="nav-collapse">
 			<fa-icon icon="bars"></fa-icon>

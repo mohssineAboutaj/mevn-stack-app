@@ -10,17 +10,21 @@ import store from "./store";
 // fontawesome icons
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+
 // import some icon
 import {
-	faUserSecret,
 	faPlus,
 	faTrash,
 	faEdit,
-	faBars
+	faBars,
+	faTimes,
+	faSave,
+	faSyncAlt
 } from "@fortawesome/free-solid-svg-icons";
 
 // define icons to use
-library.add(faUserSecret, faPlus, faTrash, faEdit, faBars);
+library.add(faPlus, faTrash, faEdit, faBars, faTimes, faSave, faSyncAlt);
+
 // use FontAwesomeIcon as component
 Vue.component("fa-icon", FontAwesomeIcon);
 

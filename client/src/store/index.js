@@ -15,39 +15,45 @@ export default new Vuex.Store({
 	},
 	mutations: {},
 	actions: {
-		async getPost({ post }, id) {
+		async getAll({ state, getters }) {
+			await getters.getAllPosts.then(async res => {
+				state.posts = await res;
+			});
+		},
+		async getPost({ state }, id) {
 			return axios
 				.get(postsAPI + id)
 				.then(async res => {
-					post = await res.data;
-					return await post;
+					state.post = await res.data;
+					return await state.post;
 				})
 				.catch(err => {
 					console.log(err);
 				});
 		},
-		async updatePost({ success, error }, { id, data }) {
+		async updatePost({ state }, { id, data }) {
 			axios
 				.put(postsAPI + id, { data })
 				.then(async res => {
-					success = res.data;
-					return success;
+					state.success = res.data;
+					return state.success;
 				})
 				.catch(err => {
-					error = err;
-					console.log(error);
+					state.error = err;
+					console.log(state.error);
 				});
 		},
-		async deletePost({ success, error }, id) {
+		async deletePost({ state, dispatch }, id) {
 			return axios
-				.delete(postsAPI + id)
+				.delete(`${postsAPI}delete/${id}`)
 				.then(async res => {
-					success = res.data;
-					return success;
+					dispatch("getAll");
+					state.success = res.data;
+					return state.success;
 				})
 				.catch(err => {
-					error = err;
-					console.log(error);
+					state.error = err;
+					console.log(state.error);
 				});
 		}
 	},
@@ -57,6 +63,7 @@ export default new Vuex.Store({
 			return await axios
 				.get(postsAPI)
 				.then(async res => {
+					// posts = await res.data.posts;
 					return await res.data.posts;
 				})
 				.catch(err => {
