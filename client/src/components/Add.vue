@@ -1,7 +1,7 @@
 <template>
 	<b-modal id="add-modal" title="Add new Post" hide-footer>
 		<div class="my-1 text-capitalize">
-			<b-form @submit="onSubmit" @reset="onReset" v-if="show">
+			<b-form @submit="onSubmit" @reset="onReset">
 				<b-form-group
 					id="input-group-1"
 					label="Post Title:"
@@ -10,10 +10,11 @@
 				>
 					<b-form-input
 						id="input-1"
-						v-model="form.title"
+						v-model="title"
 						type="text"
 						required
 						placeholder="Enter title"
+						autofocus
 					></b-form-input>
 				</b-form-group>
 
@@ -22,12 +23,14 @@
 					label="Post content:"
 					label-for="input-2"
 				>
-					<b-form-input
+					<b-form-textarea
 						id="input-2"
-						v-model="form.content"
+						v-model="content"
 						required
 						placeholder="Enter content"
-					></b-form-input>
+						rows="6"
+						max-rows="10"
+					></b-form-textarea>
 				</b-form-group>
 
 				<div class="text-right">
@@ -35,19 +38,14 @@
 						type="reset"
 						variant="danger"
 						class="my-2 mx-1 text-uppercase"
-						@click="$bvModal.hide('add-modal')"
 					>
-						<fa-icon class="mr-2" icon="times"></fa-icon>
-						<span>close</span>
+						<fa-icon class="mr-2" icon="broom"></fa-icon>
+						<span>reset</span>
 					</b-button>
 					<b-button
 						type="submit"
 						variant="primary"
 						class="my-2 mx-1 text-uppercase"
-						@click="
-							$bvModal.hide('add-modal');
-							addPost(post._id);
-						"
 					>
 						<fa-icon class="mr-2" icon="save"></fa-icon>
 						<span>save</span>
@@ -59,36 +57,39 @@
 </template>
 
 <script>
+import isEmpty from "is-empty";
+
 export default {
-	data() {
-		return {
-			form: {
-				title: "",
-				content: ""
-			},
-			show: true
-		};
-	},
+	data: () => ({
+		title: "",
+		content: ""
+	}),
 	methods: {
-		addPost() {
-			console.log("add");
-		},
-		onSubmit(evt) {
+		async onSubmit(evt) {
+			// prevent the page from reloading
 			evt.preventDefault();
-			alert(JSON.stringify(this.form));
+
+			// get data
+			let title = this.title;
+			let content = this.content;
+
+			// trim data
+			title = title.trim();
+			content = content.trim();
+
+			// check & save the data
+			if (!isEmpty(title) && !isEmpty(content)) {
+				await this.$store.dispatch("addPost", { title, content });
+				await this.$bvModal.hide("add-modal");
+			}
 		},
 		onReset(evt) {
+			// prevent the page from reloading
 			evt.preventDefault();
+
 			// Reset our form values
-			this.form.title = "";
-			this.form.content = "";
-			this.form.food = null;
-			this.form.checked = [];
-			// Trick to reset/clear native browser form validation state
-			this.show = false;
-			this.$nextTick(() => {
-				this.show = true;
-			});
+			this.title = "";
+			this.content = "";
 		}
 	}
 };

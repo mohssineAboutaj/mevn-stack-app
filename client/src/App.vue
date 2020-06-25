@@ -26,6 +26,7 @@
 								target="add-new-post"
 								title="Add New Post"
 								placement="top"
+								noninteractive
 							></b-tooltip>
 						</span>
 					</span>
@@ -35,8 +36,29 @@
 					:key="post._id"
 					class="list-group-item d-flex justify-content-between align-items-center"
 				>
-					{{ post.title }}
+					<span class="text-primary">
+						<span class="mr-2 text-left">
+							<fa-icon icon="file-alt"></fa-icon>
+						</span>
+						<span>{{ post.title }}</span>
+					</span>
 					<span class="badge-pill">
+						<span class="edit-action">
+							<button
+								class="btn btn-warning btn-sm mx-1"
+								v-b-modal.show-modal
+								@click="setCurrentPost(post)"
+								:id="'show-' + post._id"
+							>
+								<fa-icon icon="eye"></fa-icon>
+							</button>
+							<b-tooltip
+								:target="'show-' + post._id"
+								title="Show Details"
+								placement="top"
+								noninteractive
+							></b-tooltip>
+						</span>
 						<span class="edit-action">
 							<button
 								class="btn btn-info btn-sm mx-1"
@@ -50,6 +72,7 @@
 								:target="'edit-' + post._id"
 								title="Edit Post"
 								placement="top"
+								noninteractive
 							></b-tooltip>
 						</span>
 						<span class="delete-action">
@@ -65,14 +88,16 @@
 								:target="'delete-' + post._id"
 								title="Delete Post"
 								placement="top"
+								noninteractive
 							></b-tooltip>
 						</span>
 					</span>
 				</li>
 			</ul>
 		</b-container>
-		<DeleteModal :post="currentPost" />
-		<EditModal :post="currentPost" />
+		<DeleteModal v-if="!isEmpty(currentPost)" :post="currentPost" />
+		<EditModal v-if="!isEmpty(currentPost)" :post="currentPost" />
+		<ShowModal v-if="!isEmpty(currentPost)" :post="currentPost" />
 		<AddModal />
 	</div>
 </template>
@@ -82,6 +107,10 @@ import Navbar from "@/components/Navbar";
 import DeleteModal from "@/components/Delete";
 import EditModal from "@/components/Edit";
 import AddModal from "@/components/Add";
+import ShowModal from "@/components/Show";
+
+import isEmpty from "is-empty";
+import { mapState } from "vuex";
 
 export default {
 	name: "App",
@@ -89,23 +118,34 @@ export default {
 		Navbar,
 		DeleteModal,
 		EditModal,
-		AddModal
+		AddModal,
+		ShowModal
 	},
 	data: () => ({
 		postsList: [],
 		currentPost: {}
 	}),
+	computed: mapState(["posts"]),
+	watch: {
+		async posts(newVal, oldVal) {
+			if (newVal != oldVal) {
+				await this.$store.dispatch("getAll");
+			}
+		}
+	},
 	methods: {
-		setCurrentPost(post) {
-			this.currentPost = post;
+		isEmpty: arg => isEmpty(arg),
+		async setCurrentPost(post) {
+			this.currentPost = {};
+			this.currentPost = await post;
 		},
 		async fetchAndFill() {
 			await this.$store.dispatch("getAll");
 			this.postsList = await this.$store.state.posts;
 		}
 	},
-	async beforeMount() {
-		this.fetchAndFill();
+	async mounted() {
+		await this.fetchAndFill();
 	}
 };
 </script>

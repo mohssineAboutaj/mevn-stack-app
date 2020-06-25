@@ -19,11 +19,25 @@ import {
 	faBars,
 	faTimes,
 	faSave,
-	faSyncAlt
+	faSyncAlt,
+	faBroom,
+	faEye,
+	faFileAlt
 } from "@fortawesome/free-solid-svg-icons";
 
 // define icons to use
-library.add(faPlus, faTrash, faEdit, faBars, faTimes, faSave, faSyncAlt);
+library.add(
+	faPlus,
+	faTrash,
+	faEdit,
+	faBars,
+	faTimes,
+	faSave,
+	faSyncAlt,
+	faBroom,
+	faEye,
+	faFileAlt
+);
 
 // use FontAwesomeIcon as component
 Vue.component("fa-icon", FontAwesomeIcon);
