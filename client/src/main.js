@@ -24,6 +24,11 @@ import {
 	faEye,
 	faFileAlt
 } from "@fortawesome/free-solid-svg-icons";
+import {
+	faTwitterSquare,
+	faFacebookSquare,
+	faLinkedin
+} from "@fortawesome/free-brands-svg-icons";
 
 // define icons to use
 library.add(
@@ -36,7 +41,11 @@ library.add(
 	faSyncAlt,
 	faBroom,
 	faEye,
-	faFileAlt
+	faFileAlt,
+	// brands
+	faTwitterSquare,
+	faFacebookSquare,
+	faLinkedin
 );
 
 // use FontAwesomeIcon as component

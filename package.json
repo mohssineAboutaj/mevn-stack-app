@@ -1,7 +1,7 @@
 {
 	"name": "mevn-stack-app",
 	"version": "1.0.0",
-	"description": "",
+	"description": "A simple posts app (like todo list app), build using MEVN stack (Mongodb, Expressjs, Vuejs, Nodejs), it's using CRUD functionalities",
 	"main": "server/index.js",
 	"scripts": {
 		"start": "node server/index.js",
@@ -12,7 +12,8 @@
 		"express",
 		"vue",
 		"nodejs",
-		"mevn-stack-app"
+		"posts app",
+		"MEVN stack app"
 	],
 	"author": "Mohssine Aboutaj",
 	"license": "MIT",

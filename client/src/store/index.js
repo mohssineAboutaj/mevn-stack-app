@@ -3,40 +3,37 @@ import Vuex from "vuex";
 
 Vue.use(Vuex);
 
-const apiBaseUrl = "http://localhost:7700/api/";
-const postsAPI = `${apiBaseUrl}posts/`;
+const { postsAPI } = require("../../config");
 
 export default new Vuex.Store({
 	state: {
 		posts: [],
 		post: {},
-		success: {},
+		success: { status: "", message: "" },
 		error: {}
 	},
 	mutations: {},
 	actions: {
-		async getRes({ state }) {
-			return {
-				success: state.success,
-				error: state.error
-			};
-		},
-		async updatePosts({ state }, payload) {
-			state.posts = payload;
-		},
-		async getAll({ getters, dispatch }) {
-			await getters.getAllPosts.then(async res => {
-				await dispatch("updatePosts", await res);
-			});
-			// console.log("getAll() is called");
+		async getAll({ state }) {
+			return await axios
+				.get(postsAPI)
+				.then(async res => {
+					state.posts = await res.data.posts;
+				})
+				.catch(err => {
+					state.error = err;
+					console.log(err);
+				});
 		},
 		async addPost({ state, dispatch }, data) {
 			await axios
 				.post(postsAPI + "add/", data)
 				.then(async res => {
-					state.success = await res.data;
+					state.success = {
+						status: await res.data.status,
+						message: await res.data.message
+					};
 					dispatch("getAll");
-					return await state.success;
 				})
 				.catch(async err => {
 					state.error = await err;
@@ -47,9 +44,11 @@ export default new Vuex.Store({
 			axios
 				.put(`${postsAPI}update/${id}`, data)
 				.then(async res => {
-					state.success = await res.data;
+					state.success = {
+						status: await res.data.status,
+						message: await res.data.message
+					};
 					dispatch("getAll");
-					return await state.success;
 				})
 				.catch(async err => {
 					state.error = await err;
@@ -60,9 +59,11 @@ export default new Vuex.Store({
 			return axios
 				.delete(`${postsAPI}delete/${id}`)
 				.then(async res => {
-					state.success = res.data;
+					state.success = {
+						status: await res.data.status,
+						message: await res.data.message
+					};
 					dispatch("getAll");
-					return state.success;
 				})
 				.catch(err => {
 					state.error = err;
@@ -71,17 +72,5 @@ export default new Vuex.Store({
 		}
 	},
 	modules: {},
-	getters: {
-		async getAllPosts() {
-			return await axios
-				.get(postsAPI)
-				.then(async res => {
-					// posts = await res.data.posts;
-					return await res.data.posts;
-				})
-				.catch(err => {
-					console.log(err);
-				});
-		}
-	}
+	getters: {}
 });

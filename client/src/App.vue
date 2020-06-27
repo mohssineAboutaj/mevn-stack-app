@@ -3,8 +3,11 @@
 		<Navbar />
 		<b-container>
 			<div class="text-center">
-				<img alt="Vue logo" src="./assets/logo.png" />
-				<br />
+				<img alt="Vue logo" src="./assets/logo.png" class="d-inline-block" />
+				<div class="response-messages">
+					<b-toast id="success-toast" variant="info">{{ successMsg }}</b-toast>
+					<b-toast id="error-toast" variant="danger">{{ errorMsg }}</b-toast>
+				</div>
 			</div>
 			<ul class="list-group text-capitalize">
 				<li
@@ -99,23 +102,31 @@
 		<EditModal v-if="!isEmpty(currentPost)" :post="currentPost" />
 		<ShowModal v-if="!isEmpty(currentPost)" :post="currentPost" />
 		<AddModal />
+		<Footer />
 	</div>
 </template>
 
 <script>
+// import some components to use in the template
 import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 import DeleteModal from "@/components/Delete";
 import EditModal from "@/components/Edit";
 import AddModal from "@/components/Add";
 import ShowModal from "@/components/Show";
 
-import isEmpty from "is-empty";
+// import something from Vuex
 import { mapState } from "vuex";
+
+// import some packages/helpers
+import isEmpty from "is-empty";
+import toTitleCase from "to-title-case";
 
 export default {
 	name: "App",
 	components: {
 		Navbar,
+		Footer,
 		DeleteModal,
 		EditModal,
 		AddModal,
@@ -123,16 +134,24 @@ export default {
 	},
 	data: () => ({
 		postsList: [],
-		currentPost: {}
+		currentPost: {},
+		successMsg: "",
+		errorMsg: ""
 	}),
-	computed: mapState(["posts"]),
+	computed: mapState(["posts", "success", "error"]),
 	watch: {
-		async posts(v) {
-			console.log("posts state is changed", v.length);
-			// async posts(newVal, oldVal) {
-			// if (newVal != oldVal) {
-			// 	await this.$store.dispatch("getAll");
-			// }
+		async posts(newVal, oldVal) {
+			if (newVal != oldVal) {
+				this.postsList = newVal;
+			}
+		},
+		async success(val) {
+			this.successMsg = toTitleCase(val.message);
+			this.$bvToast.show("success-toast");
+		},
+		async error(val) {
+			this.errorMsg = await val.message;
+			await this.$bvToast.show("error-toast");
 		}
 	},
 	methods: {
@@ -140,21 +159,10 @@ export default {
 		async setCurrentPost(post) {
 			this.currentPost = {};
 			this.currentPost = await post;
-		},
-		async fetchAndFill() {
-			await this.$store.dispatch("getAll");
-			this.postsList = await this.$store.state.posts;
 		}
 	},
 	async mounted() {
-		await this.fetchAndFill();
-		setInterval(async () => {
-			let list = await this.$store.state.posts;
-			list = [].concat(list[0]);
-			list.forEach(post => {
-				console.log(post.content);
-			});
-		}, 1000);
+		await this.$store.dispatch("getAll");
 	}
 };
 </script>
