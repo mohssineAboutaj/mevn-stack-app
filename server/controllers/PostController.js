@@ -1,4 +1,5 @@
 const PostsDB = require("../models/PostsDB");
+const { ObjectID } = require("mongodb");
 
 // posts class
 module.exports = class Posts {
@@ -38,7 +39,7 @@ module.exports = class Posts {
 	static async onePost(id) {
 		const client = await new PostsDB().connect();
 
-		const postData = await client.findOne({}, { _id: id });
+		const postData = await client.findOne({ _id: ObjectID(id) });
 
 		return await postData;
 	}

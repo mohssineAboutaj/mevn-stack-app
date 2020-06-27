@@ -1,6 +1,6 @@
 const { Router } = require("express");
 const { ObjectID } = require("mongodb");
-const Post = require("../classes/PostClass");
+const Post = require("../controllers/PostController");
 const router = Router();
 
 // GET all

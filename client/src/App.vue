@@ -127,10 +127,12 @@ export default {
 	}),
 	computed: mapState(["posts"]),
 	watch: {
-		async posts(newVal, oldVal) {
-			if (newVal != oldVal) {
-				await this.$store.dispatch("getAll");
-			}
+		async posts(v) {
+			console.log("posts state is changed", v.length);
+			// async posts(newVal, oldVal) {
+			// if (newVal != oldVal) {
+			// 	await this.$store.dispatch("getAll");
+			// }
 		}
 	},
 	methods: {
@@ -146,6 +148,13 @@ export default {
 	},
 	async mounted() {
 		await this.fetchAndFill();
+		setInterval(async () => {
+			let list = await this.$store.state.posts;
+			list = [].concat(list[0]);
+			list.forEach(post => {
+				console.log(post.content);
+			});
+		}, 1000);
 	}
 };
 </script>

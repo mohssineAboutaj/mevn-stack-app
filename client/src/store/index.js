@@ -21,10 +21,14 @@ export default new Vuex.Store({
 				error: state.error
 			};
 		},
-		async getAll({ state, getters }) {
+		async updatePosts({ state }, payload) {
+			state.posts = payload;
+		},
+		async getAll({ getters, dispatch }) {
 			await getters.getAllPosts.then(async res => {
-				state.posts = await res;
+				await dispatch("updatePosts", await res);
 			});
+			// console.log("getAll() is called");
 		},
 		async addPost({ state, dispatch }, data) {
 			await axios
