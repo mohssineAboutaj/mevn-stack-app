@@ -81,6 +81,7 @@ export default {
 			if (!isEmpty(title) && !isEmpty(content)) {
 				await this.$store.dispatch("addPost", { title, content });
 				await this.$bvModal.hide("add-modal");
+				this.onReset(evt);
 			}
 		},
 		onReset(evt) {

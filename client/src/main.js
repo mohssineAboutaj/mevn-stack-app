@@ -22,6 +22,7 @@ import {
 	faSyncAlt,
 	faBroom,
 	faEye,
+	faCalendarAlt,
 	faFileAlt
 } from "@fortawesome/free-solid-svg-icons";
 import {
@@ -41,6 +42,7 @@ library.add(
 	faSyncAlt,
 	faBroom,
 	faEye,
+	faCalendarAlt,
 	faFileAlt,
 	// brands
 	faTwitterSquare,

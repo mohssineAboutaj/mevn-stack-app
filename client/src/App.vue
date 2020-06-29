@@ -24,7 +24,6 @@
 								<fa-icon class="mx-1" icon="plus"></fa-icon>
 								<span>new</span>
 							</button>
-
 							<b-tooltip
 								target="add-new-post"
 								title="Add New Post"
@@ -34,7 +33,13 @@
 						</span>
 					</span>
 				</li>
+				<li v-if="postsList.length == 0" class="list-group-item">
+					<h6 class="my-2 text-center text-capitalize">
+						there is no posts yet!
+					</h6>
+				</li>
 				<li
+					v-else
 					v-for="post in postsList"
 					:key="post._id"
 					class="list-group-item d-flex justify-content-between align-items-center"
@@ -141,7 +146,7 @@ export default {
 	computed: mapState(["posts", "success", "error"]),
 	watch: {
 		async posts(newVal, oldVal) {
-			if (newVal != oldVal) {
+			if (newVal !== oldVal) {
 				this.postsList = newVal;
 			}
 		},
